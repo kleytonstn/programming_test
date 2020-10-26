@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:programming_test/domain/bin_operation.dart';
+import 'package:programming_test/domain/binary_operations.dart';
 import 'package:rxdart/rxdart.dart';
 
 class BinaryProblemBloc {
   TextEditingController firstNumController = TextEditingController();
   TextEditingController secondNumController = TextEditingController();
-  List<String> operations = ['+', '-', '*', '/', '%'];
-  String currentOperator;
 
   final _currentOperationController =
       BehaviorSubject<String>.seeded('Operação');
@@ -16,6 +14,15 @@ class BinaryProblemBloc {
 
   final _resultStreamController = BehaviorSubject<String>();
   Stream<String> get resultStream => _resultStreamController.stream;
+
+  String currentOperator;
+  List<String> operations = [
+    'Soma',
+    'Subtração',
+    'Produto',
+    'Divisão',
+    'Resto'
+  ];
 
   void setCurrentOperation({@required String value}) {
     currentOperator = value;
@@ -33,27 +40,27 @@ class BinaryProblemBloc {
       return;
     }
     switch (currentOperator) {
-      case '+':
+      case 'Soma':
         _resultStreamController.sink.add(BinOperation.sum(
             firstNumber: firstNumController.text,
             secondNumber: secondNumController.text));
         break;
-      case '-':
+      case 'Subtração':
         _resultStreamController.sink.add(BinOperation.subtraction(
             firstNumber: firstNumController.text,
             secondNumber: secondNumController.text));
         break;
-      case '*':
+      case 'Produto':
         _resultStreamController.sink.add(BinOperation.product(
             firstNumber: firstNumController.text,
             secondNumber: secondNumController.text));
         break;
-      case '/':
+      case 'Divisão':
         _resultStreamController.sink.add(BinOperation.division(
             firstNumber: firstNumController.text,
             secondNumber: secondNumController.text));
         break;
-      case '%':
+      case 'Resto':
         _resultStreamController.sink.add(BinOperation.mod(
             firstNumber: firstNumController.text,
             secondNumber: secondNumController.text));
@@ -68,8 +75,6 @@ class BinaryProblemBloc {
         currentOperator == null ||
         firstNumController.text.length < 8 ||
         secondNumController.text.length < 8 ||
-        currentOperator.length < 1 ||
-        currentOperator.length > 1 ||
         nonBinaryExp.hasMatch(firstNumController.text) ||
         nonBinaryExp.hasMatch(secondNumController.text)) {
       return false;
@@ -78,7 +83,6 @@ class BinaryProblemBloc {
       int.parse(firstNumController.text, radix: 2);
       int.parse(secondNumController.text, radix: 2);
     } catch (e) {
-      print(e);
       return false;
     }
     return true;
